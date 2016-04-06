@@ -1,7 +1,7 @@
 import eightvar
 import sys
 
-eightvar.prnt("""out1
+eightvar.prnt("""8vBETA1.0v.out1
 outln
 outln
 outln
@@ -25,4 +25,4 @@ out9
 dly1
 out10
 dly1
-""")
+fin""")

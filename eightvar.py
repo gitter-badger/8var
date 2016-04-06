@@ -1,13 +1,23 @@
 import sys
 import time
-import urllib2
 
-def prnt(inp):
-    inp=inp.lower()
-    if inp[-3:] is not "fin":
-        sys.exit("[8var] ERROR: Unexpected end of file.")
-    if inp[0:2] is not "8v":
-        sys.exit("[8var] ERROR: Unexpected beginning for file.")
+def prnt(rawinp):
+    inp=""
+    while len(rawinp)>0:
+        if rawinp.startswith("\ "):
+            inp=inp+" "
+            rawinp=rawinp[2:]
+        if rawinp[0]==" ":
+            rawinp=rawinp[1:]
+        elif rawinp.startswith("\n"):
+            rawinp=rawinp[1:]
+        else:
+            inp=inp+rawinp[0]
+            rawinp=rawinp[1:]
+    if not inp.lower().startswith("8v"):
+        sys.exit("\n[8var] ERROR: 8var not initialized. ")
+    if not inp.lower().endswith("fin"):
+        sys.exit("\n[8var] ERROR: Unexpected end of file.")
     outLines=''
     version=''
     ucFloat=0
@@ -621,19 +631,19 @@ def prnt(inp):
         
         
         
-        if inp.startswith("int"):
+        if inp.lower().lower().startswith("int"):
             inp=inp[3:]
-            if inp[0]=="n":
+            if inp.lower().lower()[0]=="n":
                 lastInt=newInt
                 if intFin==1:
                     sys.exit("\n[8var] ERROR: Out of empty variables of type int.")
                 if newInt<=7:
                     inp=inp[1:]
                     intVar=""
-                    if inp[0]=="-":
+                    if inp.lower().lower()[0]=="-":
                         sub=1
                         inp=inp[1:]
-                    elif inp[0]=="+":
+                    elif inp.lower().lower()[0]=="+":
                         inp=inp[1:]
                     while inp[0] in "0123456789":
                         intVar=intVar+inp[0]
@@ -647,18 +657,18 @@ def prnt(inp):
                     intVar=""
                 else:
                     sys.exit("\n[8var] ERROR: Out of empty variables of type int.")
-            elif inp[0] in ("01234567l"):
-                if inp[0]=="l":
+            elif inp.lower().lower()[0] in ("01234567l"):
+                if inp.lower().lower()[0]=="l":
                     curInt=lastInt
                 else:
                     curInt=int(inp[0])
                 if 0<=curInt<=8:
                     inp=inp[1:]
                     intVar=""
-                    if inp[0]=="+":
+                    if inp.lower().lower()[0]=="+":
                         inp=inp[1:]
                         add=1
-                    elif inp[0]=="-":
+                    elif inp.lower().lower()[0]=="-":
                         inp=inp[1:]
                         sub=1
                     while inp[0] in "0123456789":
@@ -681,33 +691,33 @@ def prnt(inp):
             
             
             
-        elif inp.startswith("bool"):
+        elif inp.lower().lower().startswith("bool"):
             inp=inp[4:]
-            if inp[0]=="n":
+            if inp.lower().lower()[0]=="n":
                 lastBool=newBool
                 if boolFin==1:
                     sys.exit("\n[8var] ERROR: Out of empty variables of type bool.")
                 if newBool<=7:
                     inp=inp[1:]
-                    if inp[0] in "1t0f+-":
-                        if inp[0] in "1t+":
+                    if inp.lower().lower()[0] in "1t0f+-":
+                        if inp.lower().lower()[0] in "1t+":
                             varBool[newBool]=True
-                        if inp[0] in "0f-":
+                        if inp.lower().lower()[0] in "0f-":
                             varBool[newBool]=False
                         checkBool[newBool]=True
                         inp=inp[1:]
                 else:
                     sys.exit("\n[8var] ERROR: Out of empty variables of type bool.")    
-            elif inp[0] in "01234567l":
-                if inp[0]=="l":
+            elif inp.lower().lower()[0] in "01234567l":
+                if inp.lower().lower()[0]=="l":
                     curBool=lastBool
                 else:
                     curBool=int(inp[0])
                 inp=inp[1:]
-                if inp[0] in "1t0f+-":
-                    if inp[0] in "1t+":
+                if inp.lower().lower()[0] in "1t0f+-":
+                    if inp.lower().lower()[0] in "1t+":
                         varBool[curBool]=True
-                    if inp[0] in "0f-":
+                    if inp.lower().lower()[0] in "0f-":
                         varBool[curBool]=False
                     checkBool[curBool]=True
                     inp=inp[1:]
@@ -717,9 +727,9 @@ def prnt(inp):
         
         
         
-        elif inp.startswith("str"):
+        elif inp.lower().lower().startswith("str"):
             inp=inp[3:]
-            if inp[0]=="n":
+            if inp.lower().lower()[0]=="n":
                 lastStr=newStr
                 if strFin==1:
                     sys.exit("\n[8var] ERROR: Out of variables of type str.")
@@ -728,9 +738,9 @@ def prnt(inp):
                     strVar=""
                     while inp[0] is not "'" and inp[0] is not '"':
                         inp=inp[1:]
-                    if inp[0]=="'":
+                    if inp.lower()[0]=="'":
                         quotes="s"
-                    if inp[0]=='"':
+                    if inp.lower()[0]=='"':
                         quotes="d"
                     inp=inp[1:]
                     if quotes=="s":
@@ -748,21 +758,21 @@ def prnt(inp):
                     strVar=""    
                 else:
                     sys.exit("\n[8var] ERROR: Out of variables of type str.")    
-            if inp[0] in "01234567l":
-                if inp[0]=="l":
+            if inp.lower()[0] in "01234567l":
+                if inp.lower()[0]=="l":
                     curStr=lastStr
                 else:
                     curStr=int(inp[0])
                 inp=inp[1:]
                 strVar=""
-                if inp[0]=="+":
+                if inp.lower()[0]=="+":
                     add=1
                     inp=inp[1:]    
                 while inp[0] is not "'" and inp[0] is not '"':
                     inp=inp[1:]
-                if inp[0]=="'":
+                if inp.lower()[0]=="'":
                     quotes="s"
-                if inp[0]=='"':
+                if inp.lower()[0]=='"':
                     quotes="d"
                 inp=inp[1:]
                 while inp[0] is not "'" and inp[0] is not '"':
@@ -780,18 +790,18 @@ def prnt(inp):
                 
                 
                 
-        elif inp.startswith("float"):
+        elif inp.lower().startswith("float"):
             inp=inp[5:]
-            if inp[0]=="n":
+            if inp.lower()[0]=="n":
                 lastFloat=newFloat
                 if floatFin==1:
                     sys.exit("\n[8var] ERROR: Out of variables of type float.")
                 if newFloat<=7:
                     inp=inp[1:]
                     floatVar=""
-                    if inp[0]=="+":
+                    if inp.lower()[0]=="+":
                         inp=inp[1:]
-                    if inp[0]=="-":
+                    if inp.lower()[0]=="-":
                         sub=1
                         inp=inp[1:]
                     while inp[0] in "0123456789.":
@@ -804,16 +814,16 @@ def prnt(inp):
                         varFloat[newFloat]=float(floatVar)
                         checkFloat[newFloat]=True
                     floatVar=""
-            if inp[0] in "01234567l":
-                if inp[0]=="l":
+            if inp.lower()[0] in "01234567l":
+                if inp.lower()[0]=="l":
                     curFloat=lastFloat
                 else:
                     curFloat=int(inp[0])
                 inp=inp[1:]
-                if inp[0]=="+":
+                if inp.lower()[0]=="+":
                     add=1
                     inp=inp[1:]
-                if inp[0]=="-":
+                if inp.lower()[0]=="-":
                     sub=1
                     inp=inp[1:]
                 while inp[0] in "0123456789.":
@@ -834,14 +844,14 @@ def prnt(inp):
                 
             
         
-        elif inp.startswith("flt"):
+        elif inp.lower().startswith("flt"):
             inp=inp[3:]
             inp="float"+inp
             continue
         
         
             
-        elif inp.startswith("dly"):    
+        elif inp.lower().startswith("dly"):    
             inp=inp[3:]
             while inp[0] in "0123456789.":
                 delay=delay+inp[0]
@@ -857,78 +867,78 @@ def prnt(inp):
         
         
             
-        elif inp.startswith("out"):
+        elif inp.lower().startswith("out"):
             inp=inp[3:]
-            if inp[0]=="'":
+            if inp.lower()[0]=="'":
                 inp=inp[1:]
                 while inp[0] is not "'":
                     sys.stdout.write(inp[0])
                     inp=inp[1:]
                 inp=inp[1:]
-            elif inp[0]=='"':
+            elif inp.lower()[0]=='"':
                 inp=inp[1:]
                 while inp[0] is not '"':
                     sys.stdout.write(inp[0])
                     inp=inp[1:]
                 inp=inp[1:]
-            elif inp.startswith("int"):
+            elif inp.lower().startswith("int"):
                 inp=inp[3:]
-                if inp[0] in "01234567l":
-                    if inp[0]=="l":
+                if inp.lower()[0] in "01234567l":
+                    if inp.lower()[0]=="l":
                         sys.stdout.write(str(varInt[int(lastInt)]))
                     else:
                         sys.stdout.write(str(varInt[int(inp[0])]))
                     inp=inp[1:]
                 else:
                     sys.exit("\n[8var] ERROR: Variable doesn't exist.")
-            elif inp.startswith("float"):
+            elif inp.lower().startswith("float"):
                 inp=inp[5:]
-                if inp[0] in "01234567l":
-                    if inp[0]=="l":
+                if inp.lower()[0] in "01234567l":
+                    if inp.lower()[0]=="l":
                         sys.stdout.write(str(varFloat[int(lastFloat)]))
                     else:
                         sys.stdout.write(str(varFloat[int(inp[0])]))
                     inp=inp[1:]
                 else:
                     sys.exit("\n[8var] ERROR: Variable doesn't exist.")
-            elif inp.startswith("flt"):
+            elif inp.lower().startswith("flt"):
                 inp=inp[3:]
-                if inp[0] in "01234567l":
-                    if inp[0]=="l":
+                if inp.lower()[0] in "01234567l":
+                    if inp.lower()[0]=="l":
                         sys.stdout.write(str(varFloat[int(lastFloat)]))
                     else:
                         sys.stdout.write(str(varFloat[int(inp[0])]))
                     inp=inp[1:]
                 else:
                     sys.exit("\n: Variable doesn't exist.")
-            elif inp.startswith("str"):
+            elif inp.lower().startswith("str"):
                 inp=inp[3:]
-                if inp[0] in "01234567l":
-                    if inp[0]=="l":
+                if inp.lower()[0] in "01234567l":
+                    if inp.lower()[0]=="l":
                         sys.stdout.write(str(varStr[int(lastStr)]))
                     else:
                         sys.stdout.write(str(varStr[int(inp[0])]))
                     inp=inp[1:]
                 else:
                     sys.exit("\n[8var] ERROR: Variable doesn't exist.")
-            elif inp.startswith("bool"):
+            elif inp.lower().startswith("bool"):
                 inp=inp[4:]
-                if inp[0] in "01234567l":
-                    if inp[0]=="l":
+                if inp.lower()[0] in "01234567l":
+                    if inp.lower()[0]=="l":
                         sys.stdout.write(str(varBool[int(lastBool)]))
                     else:
                         sys.stdout.write(str(varBool[int(inp[0])]))
                     inp=inp[1:]
                 else:
                     sys.exit("\n[8var] ERROR: Variable doesn't exist.")
-            elif inp[0] in "0123456789":
+            elif inp.lower()[0] in "0123456789":
                 while inp[0] in "0123456789.":
                     sys.stdout.write(inp[0])
                     inp=inp[1:]
-            elif inp.startswith("ln"):
+            elif inp.lower().startswith("ln"):
                 inp=inp[2:]
                 outLines=""
-                if inp[0] in "0123456789":
+                if inp.lower()[0] in "0123456789":
                     while inp[0] in "0123456789":
                         outLines=outLines+inp[0]
                         inp=inp[1:]
@@ -944,34 +954,34 @@ def prnt(inp):
             
         
         
-        elif inp.startswith("uout"):
+        elif inp.lower().startswith("uout"):
             inp=inp[4:]
-            if inp[0] in "0123456789":
+            if inp.lower()[0] in "0123456789":
                 while inp[0] in "0123456789":
                     ucode=ucode+inp[0]
                     inp=inp[1:]
-            elif inp.startswith("int"):
+            elif inp.lower().startswith("int"):
                 inp=inp[3:]
-                if inp[0] in "01234567":
+                if inp.lower()[0] in "01234567":
                     ucode=varInt[int(inp[0])]
                     inp=inp[1:]
-                elif inp[0]=="l":
+                elif inp.lower()[0]=="l":
                     ucode=varInt[lastInt]
                     inp=inp[1:]
-            elif inp.startswith("fl"):
+            elif inp.lower().startswith("fl"):
                 inp=inp[2:]
-                if inp.startswith("oat"):
+                if inp.lower().startswith("oat"):
                     ucFloat=1
                     inp=inp[3:]
-                elif inp[0]=="t":
+                elif inp.lower()[0]=="t":
                     ucFloat=1
                     inp=inp[1:]
                 if ucFloat==1:
                     ucFloat=0
-                    if inp[0] in "01234567":
+                    if inp.lower()[0] in "01234567":
                         ucode=varFloat[int(inp[0])]
                         inp=inp[1:]
-                    elif inp[0]=="l":
+                    elif inp.lower()[0]=="l":
                         ucode=varInt[lastInt]
                         inp=inp[1:]
             ucodeInt=int(ucode)
@@ -982,13 +992,13 @@ def prnt(inp):
             
             
             
-        # if inp.startswith("inp"):
+        # if inp.lower().startswith("inp"):
         #     inp=inp[3:]
-        #     if inp.startswith(""):
+        #     if inp.lower().startswith(""):
         
             
         
-        elif inp.startswith("fin"):
+        elif inp.lower().startswith("fin"):
             inp=inp[3:]
             sys.stdout.write("\n")                      
             # print varInt
@@ -1000,15 +1010,13 @@ def prnt(inp):
             continue 
             
             
-            
-        elif inp.startswith("8v"):
-            inp=inp[3:]
-            while inp[0:2] not "v.":
+        elif inp.lower().startswith("8v"):
+            inp=inp[2:]
+            while not inp.startswith("v."):
                 version=version+inp[0]
                 inp=inp[1:]
             inp=inp[2:]
-            if version.lower() not in requests.get("")
-            continue
+            version=version.lower()
             
             
         else:
