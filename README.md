@@ -1,5 +1,7 @@
 # 8var
 
+[![Join the chat at https://gitter.im/neelusb/8var](https://badges.gitter.im/neelusb/8var.svg)](https://gitter.im/neelusb/8var?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/neelusb/8var.svg?branch=master)](https://travis-ci.org/neelusb/8var)
 
 ## What is 8var?
