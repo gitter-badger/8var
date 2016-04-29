@@ -6,4 +6,4 @@ os:
   - linux
 script: 
   - mv 8varinterpreter.py 8var
-  - python 8var test.8v
+  - python 8var travis-ci-test.8v
