@@ -7,6 +7,7 @@ python:
 os:
   - linux
   - osx
-before-script: 
+  
+script: 
   - sudo mv 8varinterpreter.py 8var
-script: ./8var test.8v
+  - python 8var test.8v
