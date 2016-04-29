@@ -1,0 +1,19 @@
+int122
+int236
+int1+36
+int1-57
+outint1
+outln
+out"Hello!"
+strn"Hey\ There"
+outlnstrl
+out"Hello"
+fltn1.666
+fltl+3.4
+outfltl
+outln
+int32.2
+outlnint3
+outln0.0
+out"I 'm done\ now,\ byeeeee!"
+By the way, the space is supposed to be there between the "I" and the "'m" and shouldn't show in the output because it hasn't been escaped with a backslash. Also, this is a comment.
