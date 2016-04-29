@@ -3,7 +3,8 @@ import time
 
 def prnt(rawinp):
     inp=""
-    while len(rawinp)>0:
+    errmsg=''
+    while len(rawinp) > 0 and errmsg == '':
         if rawinp.startswith("\ "):
             inp=inp+" "
             rawinp=rawinp[2:]
@@ -15,9 +16,9 @@ def prnt(rawinp):
             inp=inp+rawinp[0]
             rawinp=rawinp[1:]
     if not inp.lower().startswith("8v"):
-        sys.exit("\n[8var] ERROR: 8var not initialized. ")
+        errmsg = ("\n[8var] ERROR: 8var not initialized. ")
     if not inp.lower().endswith("fin"):
-        sys.exit("\n[8var] ERROR: Unexpected end of file.")
+        errmsg = ("\n[8var] ERROR: Unexpected end of file.")
     outLines=''
     version=''
     ucFloat=0
@@ -578,7 +579,7 @@ def prnt(rawinp):
         if uc==255:
             return u'\u00FF'
 
-    while len(inp)>0:
+    while len(inp) > 0 and errmsg == '':
         
         
         
@@ -636,7 +637,7 @@ def prnt(rawinp):
             if inp.lower().lower()[0]=="n":
                 lastInt=newInt
                 if intFin==1:
-                    sys.exit("\n[8var] ERROR: Out of empty variables of type int.")
+                    errmsg = ("\n[8var] ERROR: Out of empty variables of type int.")
                 if newInt<=7:
                     inp=inp[1:]
                     intVar=""
@@ -656,7 +657,7 @@ def prnt(rawinp):
                         checkInt[newInt]=True
                     intVar=""
                 else:
-                    sys.exit("\n[8var] ERROR: Out of empty variables of type int.")
+                    errmsg = ("\n[8var] ERROR: Out of empty variables of type int.")
             elif inp.lower().lower()[0] in ("01234567l"):
                 if inp.lower().lower()[0]=="l":
                     curInt=lastInt
@@ -686,7 +687,7 @@ def prnt(rawinp):
                         checkInt[curInt]=True
                     intVar=""
                 else:
-                    sys.exit("\n[8var] ERROR: Variable doesn't exist.")
+                    errmsg = ("\n[8var] ERROR: Variable doesn't exist.")
             continue
             
             
@@ -696,7 +697,7 @@ def prnt(rawinp):
             if inp.lower().lower()[0]=="n":
                 lastBool=newBool
                 if boolFin==1:
-                    sys.exit("\n[8var] ERROR: Out of empty variables of type bool.")
+                    errmsg = ("\n[8var] ERROR: Out of empty variables of type bool.")
                 if newBool<=7:
                     inp=inp[1:]
                     if inp.lower().lower()[0] in "1t0f+-":
@@ -707,7 +708,7 @@ def prnt(rawinp):
                         checkBool[newBool]=True
                         inp=inp[1:]
                 else:
-                    sys.exit("\n[8var] ERROR: Out of empty variables of type bool.")    
+                    errmsg = ("\n[8var] ERROR: Out of empty variables of type bool.")    
             elif inp.lower().lower()[0] in "01234567l":
                 if inp.lower().lower()[0]=="l":
                     curBool=lastBool
@@ -722,7 +723,7 @@ def prnt(rawinp):
                     checkBool[curBool]=True
                     inp=inp[1:]
             else:
-                sys.exit("\n[8var] ERROR: Variable doesn't exist.")
+                errmsg = ("\n[8var] ERROR: Variable doesn't exist.")
             continue
         
         
@@ -732,7 +733,7 @@ def prnt(rawinp):
             if inp.lower().lower()[0]=="n":
                 lastStr=newStr
                 if strFin==1:
-                    sys.exit("\n[8var] ERROR: Out of variables of type str.")
+                    errmsg = ("\n[8var] ERROR: Out of variables of type str.")
                 if newStr<=7:
                     inp=inp[1:]
                     strVar=""
@@ -757,7 +758,7 @@ def prnt(rawinp):
                     checkStr[newStr]=True
                     strVar=""    
                 else:
-                    sys.exit("\n[8var] ERROR: Out of variables of type str.")    
+                    errmsg = ("\n[8var] ERROR: Out of variables of type str.")    
             if inp.lower()[0] in "01234567l":
                 if inp.lower()[0]=="l":
                     curStr=lastStr
@@ -795,7 +796,7 @@ def prnt(rawinp):
             if inp.lower()[0]=="n":
                 lastFloat=newFloat
                 if floatFin==1:
-                    sys.exit("\n[8var] ERROR: Out of variables of type float.")
+                    errmsg = ("\n[8var] ERROR: Out of variables of type float.")
                 if newFloat<=7:
                     inp=inp[1:]
                     floatVar=""
@@ -862,11 +863,178 @@ def prnt(rawinp):
             continue
         
             
+        elif inp.lower().startswith("in"):
+            inp = inp[2:]
+            if inp.lower()[0:3] in ['int', 'flt']:
+                inVar = inp[0:3]
+                inp = inp[3:]
+                while inp[0] in '01234567ln+-':
+                    inVar = inVar + inp[0]
+                    inp = inp[1:]
+                inp = inVar + raw_input('') + inp
+            elif inp.lower()[0:3] == 'str':
+                inVar = inp[0:3]
+                inp = inp[3:]
+                while inp[0] in '01234567ln+-':
+                    inVar = inVar + inp[0]
+                    inp = inp[1:]
+                inp = inVar + '"' + raw_input('') + '"' + inp
+            elif inp.lower()[0:4] == 'bool':
+                inVar = inp[0:4]
+                inp = inp[4:]
+                while inp[0] in '01234567ln+-':
+                    inVar = inVar + inp[0]
+                    inp = inp[1:]
+                inp = inVar + raw_input('') + inp
+            elif inp.lower()[0:5] == 'float':
+                inVar = inp[0:5]
+                inp = inp[5:]
+                while inp[0] in '01234567ln+-':
+                    inVar = inVar + inp[0]
+                    inp = inp[1:]
+                inp = inVar + raw_input('') + inp
         
-
         
-        
-            
+        # elif inp.lower().startswith("in"):
+        #     inp = inp[1:]
+        #     intp = ''
+        #     if inp.startswith('int'):
+        #         inp = inp[3:]
+        #         if inp.lower()[0] in "01234567ln":
+        #             intp = 'int'
+        #             if inp.lower()[0] == 'l':
+        #                 outIn = int(lastInt)
+        #             elif inp.lower()[0] == 'n':
+        #                 lastInt=newInt
+        #                 if intFin==1:
+        #                     errmsg = ("\n[8var] ERROR: Out of empty variables of type int.")
+        #                 if newInt<=7:
+        #                     inp=inp[1:]
+        #                     outIn = int(lastInt)
+        #                     varInt[newInt]=int(intVar)
+        #                     checkInt[newInt]=True
+        #             else:
+        #                 outIn = int(inp.lower()[0])
+        #             inp = inp[1:] 
+        #         else:
+        #             errmsg = ("\n[8var] ERROR: Variable doesn't exist.")
+        #     elif inp.startswith('str'):
+        #         inp = inp[3:]
+        #         if inp.lower()[0] in "01234567ln":
+        #             intp = 'str'
+        #             if inp.lower()[0] == 'l':
+        #                 outIn = int(lastStr)
+        #             elif inp.lower()[0] == 'n':
+        #                 lastStr=newStr
+        #                 if strFin==1:
+        #                     errmsg = ("\n[8var] ERROR: Out of empty variables of type str.")
+        #                 if newStr<=7:
+        #                     inp=inp[1:]
+        #                     outIn = int(lastStr)
+        #                     varStr[newStr]=int(strVar)
+        #                     checkStr[newStr]=True
+        #             else:
+        #                 outIn = int(inp.lower()[0])
+        #             inp = inp[1:] 
+        #         else:
+        #             errmsg = ("\n[8var] ERROR: Variable doesn't exist.")
+        #     elif inp.startswith('bool'):
+        #         inp = inp[3:]
+        #         if inp.lower()[0] in "01234567ln":
+        #             intp = 'bool'
+        #             if inp.lower()[0] == 'l':
+        #                 outIn = int(lastBool)
+        #             elif inp.lower()[0] == 'n':
+        #                 lastBool=newBool
+        #                 if boolFin==1:
+        #                     errmsg = ("\n[8var] ERROR: Out of empty variables of type bool.")
+        #                 if newBool<=7:
+        #                     inp=inp[1:]
+        #                     outIn = int(lastBool)
+        #                     varBool[newBool]=int(boolVar)
+        #                     checkBool[newBool]=True
+        #             else:
+        #                 outIn = int(inp.lower()[0])
+        #             inp = inp[1:] 
+        #         else:
+        #             errmsg = ("\n[8var] ERROR: Variable doesn't exist.")
+        #     
+        #     elif inp.startswith('float'):
+        #         inp = inp[5:]
+        #         if inp.lower()[0] in "01234567ln":
+        #             intp = 'float'
+        #             if inp.lower()[0] == 'l':
+        #                 outIn = int(lastFloat)
+        #             elif inp.lower()[0] == 'n':
+        #                 lastFloat=newFloat
+        #                 if floatFin==1:
+        #                     errmsg = ("\n[8var] ERROR: Out of empty variables of type float.")
+        #                 if newFloat<=7:
+        #                     inp=inp[1:]
+        #                     outIn = int(lastFloat)
+        #                     varFloat[newFloat]=int(floatVar)
+        #                     checkFloat[newFloat]=True
+        #             else:
+        #                 outIn = int(inp.lower()[0])
+        #             inp = inp[1:] 
+        #         else:
+        #             errmsg = ("\n[8var] ERROR: Variable doesn't exist.")
+        #     
+        #     elif inp.startswith('flt'):
+        #         inp = inp[3:]
+        #         if inp.lower()[0] in "01234567ln":
+        #             intp = 'float'
+        #             if inp.lower()[0] == 'l':
+        #                 outIn = int(lastFloat)
+        #             elif inp.lower()[0] == 'n':
+        #                 lastFloat=newFloat
+        #                 if floatFin==1:
+        #                     errmsg = ("\n[8var] ERROR: Out of empty variables of type float.")
+        #                 if newFloat<=7:
+        #                     inp=inp[1:]
+        #                     outIn = int(lastFloat)
+        #                     varFloat[newFloat]=int(floatVar)
+        #                     checkFloat[newFloat]=True
+        #             else:
+        #                 outIn = int(inp.lower()[0])
+        #             inp = inp[1:] 
+        #         else:
+        #             errmsg = ("\n[8var] ERROR: Variable doesn't exist.")
+        #             
+        #     inpu = raw_input('')        
+        #             
+        #     if intp:
+        #         if intp == 'int':
+        #             toInt = ''
+        #             while inpu[0] in "0123456789":
+        #                 toInt = toInt + inpu[0]
+        #                 inpu = inpu[1:]
+        #             if toInt != '':
+        #                 varInt[outIn] = int(toInt)
+        #                 toInt = ''
+        #         if intp == 'float':
+        #             toFloat = ''
+        #             while inpu[0] in "0123456789.":
+        #                 toFloat = toFloat + inpu[0]
+        #                 inpu = inpu[1:]
+        #             if toFloat != '':
+        #                 varFloat[outIn] = float(toFloat)
+        #                 toFloat = ''
+        #         if intp == 'bool':
+        #             if inpu.lower()[0] in "tf":
+        #                 if inpu.lower()[0] == "t":
+        #                     varBool[outIn] = True
+        #                 else:
+        #                     varBool[outIn] = False
+        #         if intp == 'str':
+        #             toStr = ''
+        #             while inpu:
+        #                 toStr = toStr + inp[0]
+        #                 inpu = inpu[1:]
+        #                 if toStr != '':
+        #                     varStr[outIn] = toStr
+        #                     toStr = ''
+                
         elif inp.lower().startswith("out"):
             inp=inp[3:]
             if inp.lower()[0]=="'":
@@ -890,7 +1058,7 @@ def prnt(rawinp):
                         sys.stdout.write(str(varInt[int(inp[0])]))
                     inp=inp[1:]
                 else:
-                    sys.exit("\n[8var] ERROR: Variable doesn't exist.")
+                    errmsg = ("\n[8var] ERROR: Variable doesn't exist.")
             elif inp.lower().startswith("float"):
                 inp=inp[5:]
                 if inp.lower()[0] in "01234567l":
@@ -900,7 +1068,7 @@ def prnt(rawinp):
                         sys.stdout.write(str(varFloat[int(inp[0])]))
                     inp=inp[1:]
                 else:
-                    sys.exit("\n[8var] ERROR: Variable doesn't exist.")
+                    errmsg = ("\n[8var] ERROR: Variable doesn't exist.")
             elif inp.lower().startswith("flt"):
                 inp=inp[3:]
                 if inp.lower()[0] in "01234567l":
@@ -910,7 +1078,7 @@ def prnt(rawinp):
                         sys.stdout.write(str(varFloat[int(inp[0])]))
                     inp=inp[1:]
                 else:
-                    sys.exit("\n: Variable doesn't exist.")
+                    errmsg = ("\n: Variable doesn't exist.")
             elif inp.lower().startswith("str"):
                 inp=inp[3:]
                 if inp.lower()[0] in "01234567l":
@@ -920,7 +1088,7 @@ def prnt(rawinp):
                         sys.stdout.write(str(varStr[int(inp[0])]))
                     inp=inp[1:]
                 else:
-                    sys.exit("\n[8var] ERROR: Variable doesn't exist.")
+                    errmsg = ("\n[8var] ERROR: Variable doesn't exist.")
             elif inp.lower().startswith("bool"):
                 inp=inp[4:]
                 if inp.lower()[0] in "01234567l":
@@ -930,7 +1098,7 @@ def prnt(rawinp):
                         sys.stdout.write(str(varBool[int(inp[0])]))
                     inp=inp[1:]
                 else:
-                    sys.exit("\n[8var] ERROR: Variable doesn't exist.")
+                    errmsg = ("\n[8var] ERROR: Variable doesn't exist.")
             elif inp.lower()[0] in "0123456789":
                 while inp[0] in "0123456789.":
                     sys.stdout.write(inp[0])
@@ -996,8 +1164,6 @@ def prnt(rawinp):
         #     inp=inp[3:]
         #     if inp.lower().startswith(""):
         
-            
-        
         elif inp.lower().startswith("fin"):
             inp=inp[3:]
             sys.stdout.write("\n")                      
@@ -1005,10 +1171,8 @@ def prnt(rawinp):
             # print varBool
             # print varStr
             # print varFloat
-            sys.stdout.flush()
-            sys.exit(0)   
+            sys.stdout.flush()   
             continue 
-            
             
         elif inp.lower().startswith("8v"):
             inp=inp[2:]
@@ -1018,7 +1182,10 @@ def prnt(rawinp):
             inp=inp[2:]
             version=version.lower()
             
-            
         else:
             inp=inp[1:]
             continue
+    if errmsg != '':
+        return errmsg
+        errmsg = ''
+        
