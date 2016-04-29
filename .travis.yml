@@ -1,19 +1,12 @@
 language: python
 python:
-  - "2.6"
   - "2.7"
-  - "3.2"
-  - "3.3"
   - "3.4"
-  - "3.5"
   - "3.5-dev" 
   - "nightly" 
 os:
   - linux
   - osx
-sudo: required
 before-script: 
-  - sudo mv 8varinterpreter.py /usr/local/bin/8var
-  - sudo chmod a+x /usr/local/bin/8var
-  - sudo mv eightvar.py /usr/lib/python2.7/eightvar.py
-script: 8var test.8v
+  - sudo mv 8varinterpreter.py 8var
+script: ./8var test.8v
