@@ -1,3 +1,4 @@
+8v.1.0v.
 int122
 int236
 int1+36
@@ -17,3 +18,4 @@ outlnint3
 outln0.0
 out"I 'm done\ now,\ byeeeee!"
 By the way, the space is supposed to be there between the "I" and the "'m" and shouldn't show in the output because it hasn't been escaped with a backslash. Also, this is a comment.
+fin

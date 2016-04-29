@@ -7,3 +7,4 @@ os:
 script: 
   - mv 8varinterpreter.py 8var
   - python 8var travis-ci-test.8v
+  - python 8var -c "8v.1.0v.out'Hello'fin"
